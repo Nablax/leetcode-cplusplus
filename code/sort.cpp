@@ -1,4 +1,5 @@
 # include <vector>
+// some sort algorithms
 class Solution {
 public:
     std::vector<int> bubbleSort(std::vector<int>& nums) {
