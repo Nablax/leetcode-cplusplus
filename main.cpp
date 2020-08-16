@@ -1,46 +1,118 @@
-// Letter Combinations of a Phone Number
-// https://leetcode.com/problems/letter-combinations-of-a-phone-number/
-
-//Given a string containing digits from 2-9 inclusive, return all possible letter combinations that the number could represent.
+//49. Group Anagrams
 //
-//A mapping of digit to letters (just like on the telephone buttons) is given below. Note that 1 does not map to any letters.
+//https://leetcode.com/problems/group-anagrams/
+//Given an array of strings, group anagrams together.
 
-#include <map>
-#include <vector>
-using namespace std;
+#include <queue>
+#include <algorithm>
+#include <unordered_map>
 
-class Solution {
+class linkNode{
 public:
-    int getResLen(string s){
-        int len = 1;
-        for (auto x : s){
-            if(x=='9' or x=='7')
-                len *= 4;
-            else
-                len *= 3;
-        }
-        return len==1? 0:len;
+    linkNode(int k, int v):key(k), value(v){}
+    int key, value;
+    linkNode *bef;
+    linkNode *next;
+};
+
+class LRUCache {
+public:
+    LRUCache(int capacity) {
+        cap = capacity;
+        tail = head = new linkNode(0, 0);
+        head->bef = head->next = tail;
+        dic.clear();
     }
-    void appendVector(vector<string> &a, string l, int partition){
-        int len = l.size();
-        int offset = partition * len;
-        for(int i = 0; i < len; i++)
-            for(int k = i * partition; k < a.size(); k+= offset)
-                for(int j = 0; j < partition; j++){
-                    a[k + j] += l[i];
-                }
-    }
-    vector<string> letterCombinations(string digits) {
-        savedSeq = {"0", "1", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
-        vector<string> res(getResLen(digits));
-        int partition = res.size();
-        for(auto x : digits){
-            string l = savedSeq[x - '0'];
-            partition /= l.size();
-            appendVector(res, l, partition);
+
+    void remove(linkNode *tmp){
+        dic.erase(tmp->value);
+        if(tmp == tail and tmp == head){
+            return;
         }
-        return res;
+        if(tmp == tail){
+            head->next = head->bef = tail = head;
+            return;
+        }
+
+        if(tmp == head){
+            tail->next = tail->bef = head = tail;
+            return;
+        }
+        tmp->bef->next = tmp->next;
+        tmp->next->bef = tmp->bef;
+    }
+
+    void removeHead(){
+        dic.erase(head->key);
+        if(head != tail){
+            auto tmp = head;
+            head = head->next;
+            head->bef = tail;
+            tail->next = head;
+            delete tmp;
+        }
+    }
+
+    void pushback(int key, linkNode *tmp){
+        if(dic.empty()){
+            head->key = tmp->key;
+            head->value = tmp->value;
+            dic[key] = head;
+            return;
+        }
+        tmp->next = head;
+        tmp->bef = tail->bef;
+        tail->next = tmp;
+        head->bef = tmp;
+        tail = tmp;
+        dic[key] = tmp;
+    }
+
+    int get(int key) {
+        auto it = dic.find(key);
+        if(it == dic.end())
+            return -1;
+        auto res = it->second;
+        auto tmp = res->value;
+        remove(res);
+        pushback(key, res);
+        return tmp;
+    }
+
+
+    void put(int key, int value) {
+        int fsize = dic.size();
+        auto it = dic.find(key);
+        if(it != dic.end()){
+            auto tmp = it->second;
+            tmp->value = value;
+            remove(tmp);
+            pushback(key, tmp);
+        }
+        else{
+            if(fsize == cap){
+                removeHead();
+            }
+            pushback(key, new linkNode(key, value));
+        }
     }
 private:
-    vector<string> savedSeq;
+    std::unordered_map<int, linkNode*> dic;
+    int cap;
+    linkNode *head;
+    linkNode *tail;
 };
+
+int main(){
+    LRUCache *cache = new LRUCache( 1 /* capacity */ );
+
+    cache->put(2, 1);
+    int a = cache->get(2);       // returns 1
+    cache->put(3, 2);    // evicts key 2
+    a = cache->get(2);       // returns -1 (not found)
+    cache->put(4, 4);    // evicts key 1
+    cache->get(1);       // returns -1 (not found)
+    cache->get(3);       // returns 3
+    cache->get(4);       // returns 4
+
+}
