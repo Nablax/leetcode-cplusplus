@@ -1,63 +1,55 @@
-// 18. 4Sum
+// 738. Monotone Increasing Digits
 //
-// https://leetcode.com/problems/4sum/
-// Given an array nums of n integers and an integer target, are there elements a, b, c, and d in nums such that a + b + c + d = target?
-// Find all unique quadruplets in the array which gives the sum of target.
+// https://leetcode.com/problems/monotone-increasing-digits/
+// Given a non-negative integer N, find the largest number that is less than or equal to N with monotone increasing digits.
 //
-// using iterative ideas to find the N sum results, very cool
-
-#include <queue>
+//(Recall that an integer has monotone increasing digits if and only if each pair of adjacent digits x and y satisfy x <= y.)
 #include <algorithm>
 #include <unordered_map>
 #include <map>
 #include <iostream>
+#include <cmath>
+#include <set>
+#include <list>
+#include <stack>
+#include <vector>
+using namespace std;
 
 class Solution {
 public:
-    void findSum(std::vector<int> &tmpNums, std::vector<int> &nums, int n, int left, int right, int target){
-        if(n == 2){
-            int tmp;
-            while(left < right){
-                tmp = nums[left] + nums[right];
-                if(target == tmp){
-                    tmpNums[N - 2] = nums[left];
-                    tmpNums[N - 1] = nums[right];
-                    res.push_back(tmpNums);
-                    while(left < right and nums[left] == nums[left + 1]) left++;
-                    while(left < right and nums[right] == nums[right - 1]) right--;
-                    left++;
-                    right--;
-                }
-                else if(target < tmp) right--;
-                else left++;
+    int compareVersion(string version1, string version2) {
+        while(true){
+            if(version1.empty() and version2.empty())
+                return 0;
+            auto w1 = version1.find('.');
+            auto w2 = version2.find('.');
+            int tmp1 = 0, tmp2 = 0;
+            if(w1 != string::npos){
+                tmp1 = std::stoi(version1.substr(0, w1));
+                version1 = version1.substr(w1 + 1);
             }
-            return;
-        }
-        for(int i = left; i <= right - n + 1; i++){
-            if(i > left and nums[i] == nums[i - 1])
-                continue;
-            tmpNums[N - n] = nums[i];
-            findSum(tmpNums, nums, n - 1, i + 1, right, target - nums[i]);
+            else if(!version1.empty()){
+                tmp1 = std::stoi(version1);
+                version1.clear();
+            }
+            if(w2 != string::npos){
+                tmp2 = std::stoi(version2.substr(0, w2));
+                version2 = version2.substr(w2 + 1);
+            }
+            else if(!version2.empty()){
+                tmp2 = std::stoi(version2);
+                version2.clear();
+            }
+            if(tmp1 > tmp2)
+                return 1;
+            if(tmp1 < tmp2)
+                return -1;
         }
     }
-
-    std::vector<std::vector<int>> fourSum(std::vector<int>& nums, int target) {
-        int numsLen = nums.size();
-        N = 4;
-        std::sort(nums.begin(), nums.end());
-        if(numsLen < N || nums[0] * N > target || nums[numsLen - 1] * N < target)
-            return {};
-        std::vector<int> tmpRes(N, 0);
-        findSum(tmpRes, nums, N, 0, numsLen - 1, target);
-        return res;
-    }
-
-private:
-    std::vector<std::vector<int>> res;
-    int N;
 };
 
 int main(){
-    std::vector<int> nums = {1,-1,-1,0};
     Solution c;
+    c.compareVersion("1.0", "1");
+
 }
