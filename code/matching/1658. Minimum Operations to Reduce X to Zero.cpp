@@ -17,9 +17,11 @@
 #include <deque>
 #include <bitset>
 #include <memory>
+#include <numeric>
 using namespace std;
 
 //this question makes me know it inefficient to check the map all the time
+//找中间最大的数组而不是找两端，也可以双指针，此时双指针并不是从两侧而是同侧
 class Solution {
 public:
     int minOperations(vector<int>& nums, int x) {
@@ -40,7 +42,51 @@ public:
     }
 };
 
-class Solution1 {
+class Solution1_1 {
+public:
+    int minOperations(vector<int>& nums, int x) {
+        int res = nums.size() + 1, n = nums.size();
+        for(int i = 0; i < nums.size(); i++){
+            if(i > 0) nums[i] += nums[i - 1];
+            if(nums[i] == x) res = i + 1;
+        }
+        int tofind = nums.back() - x;
+        if(tofind < 0) return -1;
+        std::unordered_map<int, int> um;
+        um[tofind] = -1;
+        for(int i = 0; i < nums.size(); i++){
+            if(tofind + nums[i] < nums.back())
+                um[tofind + nums[i]] = i;
+            if(um.find(nums[i]) != um.end()){
+                res = std::min(res, n - i + um[nums[i]]);
+            }
+        }
+        return res > n? -1: res;
+    }
+};
+
+//双指针，有点有趣
+class Solution2{
+public:
+    int minOperations(vector<int>& nums, int x) {
+        int sum = std::accumulate(begin(nums), end(nums), 0);
+        int l = 0, r = 0, res = INT_MAX, sz = nums.size();
+        while (l <= r)
+            if (sum >= x) {
+                if (sum == x)
+                    res = min(res, l + sz - r);
+                if (r < sz)
+                    sum -= nums[r++];
+                else
+                    break;
+            }
+            else
+                sum += nums[l++];
+        return res == INT_MAX ? -1 : res;
+    }
+};
+
+class Solution3 {
 public:
     int minOperations(vector<int>& nums, int x) {
         unordered_map<int, int> leftSumMap, rightSumMap;

@@ -44,6 +44,46 @@ public:
     }
 };
 
+// Better solution with sliding windows
+class Solution2 {
+public:
+    int lengthOfLongestSubstring(string s) {
+        if(s.empty()) return 0;
+        int mLen = 1;
+        std::unordered_map<char, int> dic;
+        int l = 0, r = 0;
+        while(r < s.size()){
+            if(dic.find(s[r])!=dic.end() and dic[s[r]] >= l){
+                mLen = max(mLen, r - l);
+                l = dic[s[r]] + 1;
+            }
+            dic[s[r]] = r;
+            r++;
+        }
+        return max(mLen, r - l);
+    }
+};
+
+// 使用vector代替dic，快多了
+class Solution3 {
+public:
+    int lengthOfLongestSubstring(string s) {
+        if(s.empty()) return 0;
+        int mLen = 1;
+        std::vector<int> dic(256, -1);
+        int l = 0, r = 0;
+        while(r < s.size()){
+            if(dic[s[r]] > -1 and dic[s[r]] >= l){
+                mLen = max(mLen, r - l);
+                l = dic[s[r]] + 1;
+            }
+            dic[s[r]] = r;
+            r++;
+        }
+        return max(mLen, r - l);
+    }
+};
+
 
 int main(){
     Solution c;
