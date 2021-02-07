@@ -5,7 +5,7 @@
 // Return true if there is a 132 pattern in nums, otherwise, return false.
 //
 // Follow up: The O(n^2) is trivial, could you come up with the O(n logn) or the O(n) solution?
-
+// 找132不好找，反着找231就好找多了
 #include <algorithm>
 #include <unordered_map>
 #include <map>

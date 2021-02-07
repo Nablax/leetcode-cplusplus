@@ -1,5 +1,5 @@
 // Stone Game IV
-// https://leetcode.com/explore/challenge/card/october-leetcoding-challenge/562/week-4-october-22nd-october-28th/3507/
+// https://leetcode.com/problems/stone-game-iv/
 // Alice and Bob take turns playing a game, with Alice starting first.
 //
 //Initially, there are n stones in a pile.  On each player's turn, that player makes a move consisting of removing any non-zero square number of stones in the pile.

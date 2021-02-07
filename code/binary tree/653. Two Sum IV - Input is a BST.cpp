@@ -1,4 +1,4 @@
-//653. Two Sum IV - Input is a BST
+//653. Two Sum IV - Input is a BST, find two sum in a BST
 //
 //https://leetcode.com/problems/two-sum-iv-input-is-a-bst/
 //unfold an BSTs into a sequential array, then find the sum will be much easier.
@@ -26,9 +26,16 @@ public:
         nums.push_back(root->val);
         BSTtoArray(root->right);
     }
-    std::vector<int> inorderTraversal(TreeNode* root) {
+    bool findTarget(TreeNode* root, int k) {
         BSTtoArray(root);
-        return nums;
+        int left = 0, right = nums.size() - 1;
+        int tmp;
+        while(left < right){
+            tmp = nums[left] + nums[right];
+            if(tmp == k) return true;
+            tmp > k? right--: left++;
+        }
+        return false;
     }
 private:
     std::vector<int> nums;

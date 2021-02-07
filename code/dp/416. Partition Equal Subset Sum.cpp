@@ -29,14 +29,13 @@ public:
         if (_sum & 1 || _max > _sum / 2) return false;
         _sum /= 2;
         if(_max == _sum) return true;
-        std::vector<int> dp(_sum + 1, 0);
-        dp[0] = 1;
+        std::vector<bool> dp(_sum + 1, false);
+        dp[0] = true;
         for (int num : nums) {
-            if(num == _sum) return true;
+            if(num == _sum or dp[_sum]) return true;
             for (int j = _sum; j >= num; --j)
-                if(dp[j - num])
-                    dp[j] = 1;
+                if(dp[j - num]) dp[j] = true;
         }
-        return dp[_sum] > 0;
+        return dp[_sum];
     }
 };

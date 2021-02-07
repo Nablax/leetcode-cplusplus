@@ -97,8 +97,12 @@ void stdmovetest(){
 
 }
 
-
-
+void vector2dtest(){
+    std::vector<std::vector<int>> res = {{1,2,3}, {2,3}};
+    for(auto i = std::begin(res); i != std::end(res); i++){
+        std::cout<<(*i)[0]<<std::endl;
+    }
+}
 
 int testequalreturn(){
     int a = 0;
@@ -106,5 +110,5 @@ int testequalreturn(){
 }
 
 int main(){
-    stdmovetest();
+    vector2dtest();
 }
